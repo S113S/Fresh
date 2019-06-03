@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fresh.dao.AdminDao">
+    <select id="getAdminByMap" parameterType="Map" resultType="Admin">
+        select * from admin_
+        <where>
+        	<choose>
+        		<when test="phone!=null and pwd!=null">
+        			and phone=#{phone} and pwd=#{pwd}
+        		</when>
+        		<when test="aid!=null">
+        			and aid=#{aid}
+        		</when>
+        	</choose>
+        </where>
+    </select>
+    <insert id="addAdmin" parameterType="Admin">
+        INSERT INTO admin_ (name,pwd,phone) VALUES (#{name},#{pwd},#{phone})
+    </insert>
+    <update id="updateAdmin" parameterType="Admin">
+    	update admin_ set name=#{name},pwd=#{pwd},phone=#{phone},sex=#{sex},email=#{email},aimage=#{aimage} where aid=#{aid}
+    </update>
+</mapper>

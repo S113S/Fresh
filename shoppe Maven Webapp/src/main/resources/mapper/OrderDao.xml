@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fresh.dao.OrderDao">
+	<select id="getOrderByMap" parameterType="Map" resultMap="OrderMap">
+        select * from order_ where orderNum=#{orderNum}
+    </select>
+    <select id="getOrdersByMap" parameterType="Map" resultMap="OrderMap">
+        select * from order_ where uid=#{uid}
+    </select>
+    <insert id="addOrder" parameterType="Map">
+    	insert into order_ (oid,uid,orderNum,total,time,paytime,status_id,uname,uphone,address) VALUES (#{oid},#{uid},#{orderNum},#{total},#{time},#{paytime},#{status_id},#{uname},#{uphone},#{address})
+    </insert>
+    <delete id="delOrder" parameterType="Map">
+    	delete from order_
+    	<where>
+    		<choose>
+    			<when test="uid!=null">
+    				and uid=#{uid}
+    			</when>
+    			<when test="orderNum!=null">
+    				and orderNum=#{orderNum}
+    			</when>
+    		</choose>
+    	</where>
+    </delete>
+    <select id="getOrders" parameterType="Page" resultMap="OrderMap">
+        select * from order_ limit #{start},#{count}
+    </select>
+    <select id="sumCount" resultType="int">
+    	select COUNT(*) from order_
+    </select>
+    <update id="updateOrder" parameterType="Map">
+    	update order_ set status_id=#{status_id},paytime=#{paytime} where orderNum=#{orderNum}
+    </update>
+    
+    <resultMap type="Order" id="OrderMap">
+		<id property="oid" column="oid"/>
+		<result property="uid" column="uid"/>
+		<result property="orderNum" column="orderNum"/>
+		<result property="time" column="time"/>
+		<result property="paytime" column="paytime"/>
+		<result property="total" column="total"/>
+		<result property="status_id" column="status_id"/>
+		<result property="uname" column="uname"/>
+		<result property="uphone" column="uphone"/>
+		<result property="address" column="address"/>
+		
+		<association property="status" column="status_id" select="findStatus"></association>
+		<collection property="orderitems" column="orderNum" javaType="ArrayList" ofType="Orderitem" select="findOrderitems"></collection>
+	</resultMap>
+	<select id="findOrderitems" parameterType="String" resultMap="OrderitemMap">
+		select * from orderitem_ where orderNum=#{orderNum}
+	</select>
+	<select id="findStatus" parameterType="int" resultType="Status">
+		select * from status_ where status_id=#{status_id}
+	</select>
+	
+	<resultMap type="Orderitem" id="OrderitemMap">
+		<id property="orderitem_id" column="orderitem_id"/>
+		<result property="orderNum" column="orderNum"/>
+		<result property="pid" column="pid"/>
+		<result property="pnum" column="pnum"/>
+		<result property="uid" column="uid"/>
+		
+		<association property="product" column="pid" select="findProduct"></association>
+	</resultMap>
+	<select id="findProduct" parameterType="int" resultType="Product">
+		select * from product_ where pid=#{pid}
+	</select>
+</mapper>

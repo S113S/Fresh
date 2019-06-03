@@ -1,0 +1,7 @@
+com\fresh\controller\UserController.class
+com\fresh\entity\Product.class
+com\fresh\controller\HomeController.class
+com\fresh\service\UserService.class
+com\fresh\entity\User.class
+com\fresh\service\impl\UserServiceImpl.class
+com\fresh\dao\UserDao.class

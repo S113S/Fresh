@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fresh.dao.ProductDao">
+    <select id="getProduct" parameterType="Map" resultMap="ProductMap">
+        select * from product_ where pid=#{pid}
+    </select>
+    <select id="getProducts"  resultMap="ProductMap">
+        select * from product_
+    </select>
+    <select id="getProductsByMap" parameterType="Map" resultMap="ProductMap">
+        select * from product_
+        <where>
+        	<choose>
+        		<when test="tid != null">
+        			and tid=#{tid}
+        		</when>
+        	</choose>
+        </where>
+        limit #{page.start},#{page.count}
+    </select>
+    <select id="sumCount" parameterType="Map" resultType="int">
+        select COUNT(*) from product_
+        <where>
+        	<choose>
+        		<when test="tid != null">
+        			and tid=#{tid}
+        		</when>
+        	</choose>
+        </where>
+    </select>
+    <insert id="addProduct" parameterType="Product">
+    	insert into product_ (pname,pdesc,price,pimage,pnum,tid,rid,pdeta) VALUES (#{pname},#{pdesc},#{price},#{pimage},#{pnum},#{tid},#{rid},#{pdeta})
+    </insert>
+    <delete id="delProduct" parameterType="Map">
+    	delete from product_ where pid=#{pid}
+    </delete>
+    <update id="updateProduct" parameterType="Product">
+    	update user_ set pname=#{pname},pdesc=#{pdesc},price=#{price},pimage=#{pimage},pnum=#{pnum},tid=#{tid},rid=#{rid},pdeta=#{pdeta} where pid=#{pid}
+    </update>
+    
+    <resultMap type="Product" id="ProductMap">
+		<id property="pid" column="pid"/>
+		<result property="pname" column="pname"/>
+		<result property="pdesc" column="pdesc"/>
+		<result property="price" column="price"/>
+		<result property="pimage" column="pimage"/>
+		<result property="tid" column="tid"/>
+		<result property="pnum" column="pnum"/>
+		<result property="rid" column="rid"/>
+		<result property="pdeta" column="pdeta"/>
+		
+		<association property="type" column="tid" select="findType"></association>
+		<association property="recommend" column="rid" select="findRecommend"></association>
+	</resultMap>
+	
+	<select id="findType" parameterType="int" resultType="Type">
+		select * from type_ where tid=#{tid}
+	</select>
+	<select id="findRecommend" parameterType="int" resultType="Recommend">
+		select * from recommend_ where rid=#{rid}
+	</select>
+</mapper>

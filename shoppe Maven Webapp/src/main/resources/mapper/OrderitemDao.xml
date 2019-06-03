@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fresh.dao.OrderitemDao">
+	<select id="getOrderitemByMap" parameterType="Map" resultType="Orderitem">
+        select * from orderitem_
+        <where>
+        	<choose>
+        		<when test="uid!=null and pid!=null">
+        			and uid=#{uid} and pid=#{pid}
+        		</when>
+        	</choose>
+        </where>
+    </select>
+    <insert id="addOrderitem">
+    	insert into orderitem_ (uid,orderNum,pid,pnum) VALUE (#{uid},#{orderNum},#{pid},#{pnum})
+    </insert>
+    <delete id="delOrderitem" parameterType="Map">
+    	delete from orderitem_
+    	<where>
+    		<choose>
+    			<when test="orderNum!=null">
+    				and orderNum=#{orderNum}
+    			</when>
+    		</choose>
+    	</where>
+    </delete>
+</mapper>
